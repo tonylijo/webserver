@@ -1,0 +1,53 @@
+/*
+ * Web server in cpp
+ */
+#include<stdio.h>
+#include<iostream>
+#include<sys/socket.h>
+#include<sys/types.h>
+#include<sys/stat.h>
+#include<cstdlib>
+#include<string.h>
+#include<string>
+#include<vector>
+#include"socket.h"
+#include<pthread.h>
+using namespace std;
+
+vector<string> split(char *buf,char *delim)
+{
+  vector<string> result;
+  char *tock = strtok(buf,delim);
+  while(tock != NULL) {
+    result.push_back(tock);
+    tock = strtok(NULL,delim);
+  }
+  return result;
+}
+
+map < string, vector <string> > split_to_map(vector <string> vectref)
+{
+  int i;
+  map<string,vector<string> > map_loc;
+  for(i = 0; i < vectref.size(); i++) {
+    map_lock[split(vectref[i]," ")[0]] = vectref.erase(vectref.begin());
+  }
+  return map_lock;
+}
+
+int main(int argc,char *argv[])
+{
+  int i;
+  Socket sock = Socket(80,(char *)"127.0.0.1");
+  struct sockaddr_in client;
+  int connected;
+  char buf[1024];
+  connected = sock.Accept((struct sockaddr *) &client);
+  int count;
+  count = recv(connected,buf,1024,0);
+  buf[count] = '\0';
+  vector<string> line_tock = split(buf,"\n");
+  /*  for(i = 0; i < line_tock.size(); i++) 
+      cout << line_tock[i] << endl;*/
+  cout << split_to_map(line_tock)['GET'] << endl;
+}
